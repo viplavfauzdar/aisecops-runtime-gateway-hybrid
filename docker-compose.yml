@@ -1,0 +1,96 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  risk-intel:
+    build:
+      context: services/risk-intel
+    environment:
+      - ENV=${ENV}
+    ports:
+      - "${RISK_INTEL_PORT}:8090"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8090/health').read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  policy-engine:
+    build:
+      context: services/policy-engine
+    environment:
+      - ENV=${ENV}
+      - RISK_INTEL_URL=${RISK_INTEL_URL}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "${POLICY_PORT}:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      risk-intel:
+        condition: service_healthy
+
+  orchestrator:
+    build:
+      context: services/orchestrator
+    environment:
+      - ENV=${ENV}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "${ORCH_PORT}:8082"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  tool-runner:
+    build:
+      context: services/tool-runner
+    environment:
+      - ENV=${ENV}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "${TOOLRUNNER_PORT}:8083"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  gateway-api:
+    build:
+      context: services/gateway-api
+    environment:
+      - ENV=${ENV}
+      - POLICY_ENGINE_URL=http://policy-engine:8081
+      - ORCHESTRATOR_URL=http://orchestrator:8082
+      - TOOL_RUNNER_URL=http://tool-runner:8083
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "${GATEWAY_PORT}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      policy-engine:
+        condition: service_started
+
+volumes:
+  pgdata:

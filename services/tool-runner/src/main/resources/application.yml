@@ -1,0 +1,14 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/aisecops}
+    username: ${SPRING_DATASOURCE_USERNAME:aisecops}
+    password: ${SPRING_DATASOURCE_PASSWORD:aisecops}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus

@@ -1,0 +1,38 @@
+flowchart TB
+  %% Users & Entry
+  U[Employees / Apps] --> SSO[Enterprise SSO<br/>OIDC / OAuth2]
+  SSO --> GW[AI Runtime Gateway API<br/>Spring Boot]
+
+  %% Governance
+  GW --> PDP[Policy Decision Point<br/>AISecOps Policy Engine]
+  PDP -->|Allow| ORCH[OpenClaw Orchestrator]
+  PDP -->|Deny / Redact / Require Approval| GUARD[Guardrails<br/>Redaction + HITL Gate]
+
+  %% Model routing
+  ORCH --> MR[Model Router]
+  MR --> LCL[Local LLMs<br/>Ollama]
+  MR --> OAI[OpenAI]
+  MR --> ANT[Anthropic]
+
+  %% Tools
+  ORCH --> TR[Tool Registry]
+  TR --> SBX[Tool Sandbox Runner<br/>Docker / gVisor*]
+  SBX --> INT[Internal Systems<br/>Jira, GitHub, CI/CD, GCP/AWS, DBs]
+  SBX --> EXT[External APIs<br/>Vendor SaaS]
+
+  %% Observability & Audit
+  GW --> AUD[Audit Log Store<br/>Postgres]
+  ORCH --> AUD
+  SBX --> AUD
+  PDP --> AUD
+
+  GW --> OBS[Observability<br/>Metrics + Traces + Logs]
+  ORCH --> OBS
+  SBX --> OBS
+
+  %% Admin UI
+  ADM[Admin Console UI] --> GW
+  ADM --> AUD
+
+  classDef core fill:#f5f5f5,stroke:#333,stroke-width:1px;
+  class GW,PDP,ORCH,MR,SBX,AUD,OBS core;

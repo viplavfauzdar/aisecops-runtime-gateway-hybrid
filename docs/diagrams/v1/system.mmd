@@ -1,0 +1,11 @@
+flowchart TB
+  U["Employees / Apps"] --> SSO["Enterprise SSO"]
+  SSO --> GW["Gateway API (Spring Boot)"]
+  GW --> PDP["Policy Engine (Spring Boot)"]
+  PDP --> RI["Risk-Intel (Python/FastAPI)"]
+  PDP --> ORCH["Orchestrator (Spring Boot / OpenClaw)"]
+  ORCH --> TOOL["Tool Runner (Spring Boot)"]
+  GW --> AUD["Postgres: Audit"]
+  PDP --> AUD
+  ORCH --> AUD
+  TOOL --> AUD

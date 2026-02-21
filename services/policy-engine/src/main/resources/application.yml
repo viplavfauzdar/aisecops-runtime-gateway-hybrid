@@ -1,0 +1,21 @@
+server:
+  port: 8081
+
+RISK_INTEL_URL: ${RISK_INTEL_URL:http://localhost:8090}
+POLICY_FILE: src/main/resources/policies/default.yaml
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/aisecops}
+    username: ${SPRING_DATASOURCE_USERNAME:aisecops}
+    password: ${SPRING_DATASOURCE_PASSWORD:aisecops}
+    hikari:
+      initialization-fail-timeout: 0
+      connection-timeout: 30000
+      maximum-pool-size: 10
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus

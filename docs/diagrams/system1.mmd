@@ -1,0 +1,30 @@
+C4Container
+title AISecOps Runtime Gateway – Container Diagram
+
+Person(user, "Employees / Apps", "Internal users and enterprise applications")
+
+System_Boundary(system, "AISecOps Runtime Gateway") {
+
+  Container(gateway, "Gateway API", "Spring Boot", "Entry point, authentication boundary, request routing")
+
+  Container(policy, "Policy Engine (PDP)", "Spring Boot", "Evaluates policies, enforces redaction, risk scoring, approval gates")
+
+  Container(risk, "Risk-Intel Service", "Python / FastAPI", "PII detection and heuristic risk scoring")
+
+  Container(orchestrator, "Orchestrator", "Spring Boot + OpenClaw", "Agent workflow execution and coordination")
+
+  Container(toolrunner, "Tool Runner", "Spring Boot", "Sandboxed tool execution (Docker)")
+
+  ContainerDb(auditdb, "Audit Log Store", "PostgreSQL", "Stores audit events, correlation IDs, risk scores")
+
+}
+
+Rel(user, gateway, "Sends requests")
+Rel(gateway, policy, "Policy evaluation")
+Rel(policy, risk, "Calls for risk scoring")
+Rel(policy, orchestrator, "Allows / denies execution")
+Rel(orchestrator, toolrunner, "Invokes tools")
+Rel(gateway, auditdb, "Writes audit events")
+Rel(policy, auditdb, "Writes audit events")
+Rel(orchestrator, auditdb, "Writes audit events")
+Rel(toolrunner, auditdb, "Writes audit events")

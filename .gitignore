@@ -1,0 +1,204 @@
+############################################
+# General
+############################################
+.DS_Store
+Thumbs.db
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+
+############################################
+# Environment files (DO NOT COMMIT SECRETS)
+############################################
+.env
+.env.*
+!.env.example
+
+############################################
+# IDE / Editor
+############################################
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+############################################
+# Java / Gradle (Spring Boot services)
+############################################
+.gradle/
+build/
+out/
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Keep Gradle wrapper jar
+!gradle/wrapper/gradle-wrapper.jar
+
+############################################
+# Spring Boot
+############################################
+application-local.yml
+application-dev.yml
+
+############################################
+# Python (risk-intel service)
+############################################
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+env/
+pip-wheel-metadata/
+.coverage
+.coverage.*
+htmlcov/
+
+############################################
+# Pytest / mypy
+############################################
+.pytest_cache/
+.mypy_cache/
+
+############################################
+# Docker
+############################################
+docker-data/
+*.pid
+*.seed
+
+############################################
+# Logs / Runtime artifacts
+############################################
+*.out
+*.err
+*.stackdump
+
+############################################
+# OS-specific
+############################################
+Icon?
+._*
+############################################
+# Node / Frontend (if added later)
+############################################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnp.*
+.pnpm-store/
+.next/
+.nuxt/
+.svelte-kit/
+dist/
+build/
+.cache/
+.vite/
+coverage/
+.eslintcache
+.stylelintcache
+
+############################################
+# Terraform (if added later)
+############################################
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Terraform variable files may contain secrets
+*.tfvars
+*.tfvars.json
+
+############################################
+# Helm / Kubernetes packaging (if added later)
+############################################
+*.tgz
+charts/*.tgz
+
+############################################
+# Secrets / Keys / Certificates (defense-in-depth)
+############################################
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.crt
+*.cer
+*.der
+*.csr
+
+# Common secret files
+secrets/
+**/secrets/
+*.secret
+*.secrets
+*.vault
+*.age
+*.sops.*
+*.enc
+
+############################################
+# Local databases / volumes / caches
+############################################
+pgdata/
+postgres-data/
+data/
+volumes/
+**/volumes/
+**/data/
+**/.local/
+**/.cache/
+
+############################################
+# Reports / artifacts (coverage, scans, SBOM)
+############################################
+reports/
+**/reports/
+**/test-results/
+**/surefire-reports/
+**/failsafe-reports/
+**/jacoco/
+**/allure-results/
+**/allure-report/
+**/dependency-check-report.*
+**/spotbugs.*
+**/checkstyle.*
+**/pmd.*
+**/trivy.*
+**/snyk.*
+**/gitleaks.*
+**/cyclonedx*
+**/sbom*
+
+############################################
+# Misc tooling
+############################################
+.history/
+.direnv/
+.envrc
+*.swp
+*.swo
+*.bak
