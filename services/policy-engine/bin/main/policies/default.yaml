@@ -1,3 +1,0 @@
-# AISecOps Policy (V1)
-denyThreshold: 80
-redactPii: true
